@@ -1,0 +1,22 @@
+<p>Home Test</p>
+
+<form action="/logout" method="post">
+    <input type="submit" value="logout">
+</form></br>
+
+<form action="/check" method="post">
+    <input type="text" name="tms" placeholder="TMSのURLを貼ってください">
+    <input type="submit" value="送信">
+</form></br>
+
+<% unless session[:memory].nil? %>
+<% session[:memory].each do |m| %>
+    <% (0..2).each do |t| %>
+        <p><%= m[t] %></p>
+    <% end %>
+    <p>--------------</p>
+<% end %>
+<% else %>
+<p>あいうえお</p>
+<% end %>
+
