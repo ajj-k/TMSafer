@@ -7,7 +7,7 @@ require 'sinatra-websocket'
 require 'google_drive'
 
 enable :sessions
- config.jsonを読み込んでセッションを確立
+# config.jsonを読み込んでセッションを確立
 session = GoogleDrive::Session.from_config("config.json")
   
 sp = session.spreadsheet_by_url("https://docs.google.com/spreadsheets/d/1PdDmQSXqN_FnRhGj9mAhyhZDTdt1r2OrgJL-N4Y2ZMI/edit#gid=1393875168")
