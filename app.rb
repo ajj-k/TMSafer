@@ -3,7 +3,6 @@ Bundler.require
 require 'sinatra/reloader' if development?
 require 'sinatra/activerecord'
 require './models'
-require 'sinatra-websocket'
 require 'google_drive'
 
 enable :sessions
