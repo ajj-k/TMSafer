@@ -8,6 +8,8 @@ gem 'rake', '~> 13.0'
 gem 'bcrypt'
 gem 'sinatra-websocket'
 gem 'thin'
+gem 'google-api-client'
+gem 'google_drive'
 
 group :development do
   gem 'debase'
