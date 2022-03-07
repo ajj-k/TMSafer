@@ -3,9 +3,19 @@ Bundler.require
 require 'sinatra/reloader' if development?
 require 'sinatra/activerecord'
 require './models'
+require 'dotenv/load'
 require 'google_drive'
 
 enable :sessions
+
+before do
+    Dotenv.load
+    Cloudinary.config do |config|
+        config.cloud_name = ENV['CLOUD_NAME']
+        config.api_key    = ENV['CLOUDINARY_API_KEY']
+        config.api_secret = ENV['CLOUDINARY_API_SECRET']
+    end
+end
 
 helpers do
     def current_user
@@ -71,6 +81,26 @@ get '/school/:id/del' do
     school = School.find(params[:id])
     school.destroy
     erb :home
+end
+
+post '/school/:id/members/add' do
+    img_url = ''
+    if params[:file]
+       img = params[:file]
+       tempfile = img[:tempfile]
+       upload = Cloudinary::Uploader.upload(tempfile.path)
+       img_url = upload['url']
+    end
+    
+    Member.create({
+        name: params[:name],
+        url: params[:url],
+        icon: img_url
+    })
+    
+    @school_id = params[:id]
+    
+    redirect "/school/#{params[:id]}"
 end
 
 post '/check' do

@@ -8,6 +8,8 @@ gem 'rake', '~> 13.0'
 gem 'bcrypt'
 gem 'google-api-client'
 gem 'google_drive'
+gem 'cloudinary', '~> 1.18'
+gem 'dotenv', '~> 2.7'
 
 group :development do
   gem 'debase'

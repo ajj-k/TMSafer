@@ -1,3 +1,65 @@
 <a href="/home">戻る</a></br>
-<a href='/school/<%= @school_id %>/del'>このスクールを削除する</a>
+<a href='/school/<%= @school_id %>/del'>このスクールを削除する</a></br>
+
+<form action="/check" method="post">
+    <input type="text" name="tms" placeholder="TMSのURLを貼ってください">
+    <input type="submit" value="送信">
+</form></br>
+
+<p>メンバー一覧</p>
+<% School.find(@school_id).members.each do |member| %>
+    <p><%= member.name %></p>
+    <p><%= member.icon %></p>
+<% end %>
+
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    新規メンバー登録
+</button>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">新規メンバー登録</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>メンバー登録</p>
+                <form action="/school/<%= @school_id %>/members/add" method="post" enctype="multipart/form-data">
+                    <input type="text" name="name" placeholder="ニックネームを入力してください"></br>
+                    <!--<input type="text" name="cource" placeholder="コース名を入力してください">-->
+                    <input type="text" name="url" placeholder="TMSのURLを入力してください"></br>
+                    <input type="file" name="icon"></br>
+                    <input type="submit" value="登録">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">閉じる</button>
+                <button type="button" class="btn btn-primary">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<form action="/school/<%= @school_id %>/members/add" method="post">
+    
+</form>
+
+<% unless session[:memory].nil? %>
+<% session[:memory].each do |m| %>
+    <% (0..2).each do |t| %>
+        <p><%= m[t] %></p>
+    <% end %>
+    <p>--------------</p>
+<% end %>
+<% else %>
+TMSがありません
+<% if @error_check %>
+Error!
+<% end %>
+<% end %>
+
+
 
