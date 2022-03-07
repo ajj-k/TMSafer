@@ -58,30 +58,44 @@ post '/logout' do
 end
 
 post '/check' do
+    !@error_check
     begin
     session[:memory] = nil
     @tms = params[:tms]
-    @sp_check = session_google.spreadsheet_by_url(@tms)
-    @ws_check = @sp_check.worksheet_by_title("TMS")
-    @roop = true
+    ws_memory = ""
+    sp_check = session_google.spreadsheet_by_url(@tms)
+    ws_check = sp_check.worksheet_by_title("TMS")
+    roop = true
     session[:memory] = []
-    @i = 21
-    while @roop do
-        if @ws_check[@i,4].length != 0
-            puts @ws_check[@i,4]
-            puts @ws_check[@i,5]
-            puts @ws_check[@i,6]
+    i = 21
+    while roop do
+        if ws_check[i,4].length != 0
+            (0..10).each do |t|
+                puts 6+t
+                puts ws_check[i,6+t]
+                if ws_check[i,6+t].length != 0
+                    ws_memory = ws_check[i,6+t]
+                    puts "get"
+                end
+                puts ws_memory
+            end
+            
+            puts ws_check[i,4]
+            puts ws_check[i,5]
+            puts ws_memory
             puts "---------"
-            session[:memory].push([@ws_check[@i,4], @ws_check[@i,5], @ws_check[@i,6]])
+
+            session[:memory].push([ws_check[i,4], ws_check[i,5], ws_memory])
         else
-            @roop = false
+            roop = false
             break
         end
-        @i += 1
+        i += 1
     end
-    puts session[:memory]
+    #puts session[:memory]
     rescue
         puts 'error'
+        @error_check = true
     end
     redirect "/home"
 end
