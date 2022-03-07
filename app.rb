@@ -58,6 +58,7 @@ post '/logout' do
 end
 
 post '/check' do
+    begin
     session[:memory] = nil
     @tms = params[:tms]
     @sp_check = session_google.spreadsheet_by_url(@tms)
@@ -79,6 +80,8 @@ post '/check' do
         @i += 1
     end
     puts session[:memory]
-    puts "だよ"
+    rescue
+        puts 'error'
+    end
     redirect "/home"
 end
