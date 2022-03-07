@@ -73,7 +73,6 @@ get '/school/:id/del' do
     erb :home
 end
 
-
 post '/check' do
     @error_check = !@error_check
     begin

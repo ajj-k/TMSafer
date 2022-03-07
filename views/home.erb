@@ -9,19 +9,6 @@
     <input type="submit" value="送信">
 </form></br>
 
-<p>School一覧</p>
-<% School.all.each do |school| %>
-    <a href="/school/<%= school.id %>"><%= school.name %></a>
-<% end %>
-
-<p>School作成</p>
-<form action="/school/create" method="post">
-    <input type="text" name="name" placeholder="school名を入力してください">
-    <input type="submit" value="登録">
-</form></br>
-
-
-
 <% unless session[:memory].nil? %>
 <% session[:memory].each do |m| %>
     <% (0..2).each do |t| %>
@@ -35,4 +22,47 @@ TMSがありません
 Error!
 <% end %>
 <% end %>
+
+
+<p>School一覧</p>
+<% School.all.each do |school| %>
+    <a href="/school/<%= school.id %>"><%= school.name %></a></br>
+<% end %>
+
+<!--
+<p>School作成</p>
+<form action="/school/create" method="post">
+    <input type="text" name="name" placeholder="school名を入力してください">
+    <input type="submit" value="登録">
+</form></br>
+-->
+
+<!-- data-bs-〇〇 と入力する必要がある -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    新規スクール作成
+</button>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">タイトル</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>内容</p>
+                <form action="/school/create" method="post">
+                    <input type="text" name="name" placeholder="school名を入力してください">
+                    <input type="submit" value="登録">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">閉じる</button>
+                <button type="button" class="btn btn-primary">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
 
