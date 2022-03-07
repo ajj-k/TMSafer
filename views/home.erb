@@ -1,4 +1,4 @@
-<p>Home Test</p>
+<p>Home Test <%= current_user.name %>としてログイン</p>
 
 <form action="/logout" method="post">
     <input type="submit" value="logout">
@@ -8,6 +8,19 @@
     <input type="text" name="tms" placeholder="TMSのURLを貼ってください">
     <input type="submit" value="送信">
 </form></br>
+
+<p>School一覧</p>
+<% School.all.each do |school| %>
+    <a href="/school/<%= school.id %>"><%= school.name %></a>
+<% end %>
+
+<p>School作成</p>
+<form action="/school/create" method="post">
+    <input type="text" name="name" placeholder="school名を入力してください">
+    <input type="submit" value="登録">
+</form></br>
+
+
 
 <% unless session[:memory].nil? %>
 <% session[:memory].each do |m| %>

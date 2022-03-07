@@ -39,7 +39,7 @@ post '/sign_in' do
 end
 
 post '/sign_up' do
-    @user = User.create(mail: params[:mail], password: params[:password],
+    @user = User.create(name: params[:name], mail: params[:mail], password: params[:password],
     password_confirmation: params[:password_confirmation]) 
     if @user.persisted? #登録済みだった場合の確認
         session[:user] = @user.id 
@@ -56,6 +56,23 @@ post '/logout' do
     session[:memory] = nil
     redirect '/'
 end
+
+get '/school/:id' do
+    @school_id = params[:id]
+    erb :tasks
+end
+
+post '/school/create' do
+    @school = School.create(name: params[:name])
+    redirect '/home'
+end
+
+get '/school/:id/del' do
+    school = School.find(params[:id])
+    school.destroy
+    erb :home
+end
+
 
 post '/check' do
     @error_check = !@error_check
