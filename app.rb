@@ -16,13 +16,13 @@ end
 # config.jsonを読み込んでセッションを確立
 # この部分はテストを兼ねている
 session_google = GoogleDrive::Session.from_config("config.json")
-sp = session_google.spreadsheet_by_url("https://docs.google.com/spreadsheets/d/1PdDmQSXqN_FnRhGj9mAhyhZDTdt1r2OrgJL-N4Y2ZMI/edit#gid=1393875168")
-ws = sp.worksheet_by_title("TMS")
+#sp = session_google.spreadsheet_by_url("https://docs.google.com/spreadsheets/d/1PdDmQSXqN_FnRhGj9mAhyhZDTdt1r2OrgJL-N4Y2ZMI/edit#gid=1393875168")
+#ws = sp.worksheet_by_title("TMS")
 
 get '/' do
-    ws[2, 1] = "foo" # セルA2
-    ws[2, 2] = "bar" # セルB2
-    ws.save
+    #ws[2, 1] = "foo" # セルA2
+    #ws[2, 2] = "bar" # セルB2
+    #ws.save
     erb :sign_in
 end
 
@@ -58,7 +58,7 @@ post '/logout' do
 end
 
 post '/check' do
-    !@error_check
+    @error_check = !@error_check
     begin
     session[:memory] = nil
     @tms = params[:tms]
@@ -71,21 +71,20 @@ post '/check' do
     while roop do
         if ws_check[i,4].length != 0
             (0..10).each do |t|
-                puts 6+t
-                puts ws_check[i,6+t]
+                #puts 6+t
+                #puts ws_check[i,6+t]
                 if ws_check[i,6+t].length != 0
                     ws_memory = ws_check[i,6+t]
                     puts "get"
                 end
-                puts ws_memory
+                #puts ws_memory
             end
-            
-            puts ws_check[i,4]
-            puts ws_check[i,5]
-            puts ws_memory
-            puts "---------"
-
+            #puts ws_check[i,4]
+            #puts ws_check[i,5]
+            #puts ws_memory
+            #puts "---------"
             session[:memory].push([ws_check[i,4], ws_check[i,5], ws_memory])
+            ws_memory = ""
         else
             roop = false
             break
