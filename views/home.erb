@@ -25,7 +25,7 @@ Error!
 
 
 <p>School一覧</p>
-<% School.all.each do |school| %>
+<% current_user.schools.all.each do |school| %>
     <a href="/school/<%= school.id %>"><%= school.name %></a></br>
 <% end %>
 
@@ -57,10 +57,6 @@ Error!
                     <input type="text" name="name" placeholder="school名を入力してください">
                     <input type="submit" value="登録">
                 </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">閉じる</button>
-                <button type="button" class="btn btn-primary">OK</button>
             </div>
         </div>
     </div>

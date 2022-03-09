@@ -7,9 +7,9 @@
 </form></br>
 
 <p>メンバー一覧</p>
-<% School.find(@school_id).members.each do |member| %>
+<% current_user.schools.find(@school_id).members.each do |member| %>
     <p><%= member.name %></p>
-    <p><%= member.icon %></p>
+    <p><img src="<%= member.icon %>" width="40" height="40"></p>
 <% end %>
 
 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">

@@ -5,6 +5,7 @@ require 'sinatra/activerecord'
 require './models'
 require 'dotenv/load'
 require 'google_drive'
+require 'date'
 
 enable :sessions
 
@@ -20,6 +21,50 @@ end
 helpers do
     def current_user
         User.find_by(id: session[:user])
+    end
+    
+    def tms_check(url)
+    session_google = GoogleDrive::Session.from_config("config.json")
+    @error_check = !@error_check
+    begin
+    session[:memory] = nil
+    ws_memory = ""
+    date_check = ""
+    sp_check = session_google.spreadsheet_by_url(url)
+    ws_check = sp_check.worksheet_by_title("TMS")
+    roop = true
+    session[:memory] = []
+    i = 21
+    while roop do
+        if ws_check[i,4].length != 0
+            (0..10).each do |t|
+                #puts 6+t
+                #puts ws_check[i,6+t]
+                if ws_check[i,6+t].length != 0
+                    ws_memory = ws_check[i,6+t]
+                    date_check = ws_check[8,6+t]
+                    puts "get"
+                end
+                #puts ws_memory
+            end
+            puts date_check
+            #puts ws_check[i,4]
+            #puts ws_check[i,5]
+            #puts ws_memory
+            #puts "---------"
+            session[:memory].push([ws_check[i,4], ws_check[i,5], ws_memory])
+            ws_memory = ""
+        else
+            roop = false
+            break
+        end
+        i += 1
+    end
+    #puts session[:memory]
+    rescue
+        puts 'error'
+        @error_check = true
+    end
     end
 end
 
@@ -58,7 +103,9 @@ post '/sign_up' do
 end
 
 get '/home' do
-   erb :home 
+    day = Date.today
+    puts day
+    erb :home 
 end
 
 post '/logout' do
@@ -73,7 +120,7 @@ get '/school/:id' do
 end
 
 post '/school/create' do
-    @school = School.create(name: params[:name])
+    @school = School.create(name: params[:name], user_id: session[:user])
     redirect '/home'
 end
 
@@ -85,8 +132,8 @@ end
 
 post '/school/:id/members/add' do
     img_url = ''
-    if params[:file]
-       img = params[:file]
+    if params[:icon]
+       img = params[:icon]
        tempfile = img[:tempfile]
        upload = Cloudinary::Uploader.upload(tempfile.path)
        img_url = upload['url']
@@ -95,7 +142,8 @@ post '/school/:id/members/add' do
     Member.create({
         name: params[:name],
         url: params[:url],
-        icon: img_url
+        icon: img_url,
+        school_id: params[:id]
     })
     
     @school_id = params[:id]
@@ -104,43 +152,6 @@ post '/school/:id/members/add' do
 end
 
 post '/check' do
-    @error_check = !@error_check
-    begin
-    session[:memory] = nil
-    @tms = params[:tms]
-    ws_memory = ""
-    sp_check = session_google.spreadsheet_by_url(@tms)
-    ws_check = sp_check.worksheet_by_title("TMS")
-    roop = true
-    session[:memory] = []
-    i = 21
-    while roop do
-        if ws_check[i,4].length != 0
-            (0..10).each do |t|
-                #puts 6+t
-                #puts ws_check[i,6+t]
-                if ws_check[i,6+t].length != 0
-                    ws_memory = ws_check[i,6+t]
-                    puts "get"
-                end
-                #puts ws_memory
-            end
-            #puts ws_check[i,4]
-            #puts ws_check[i,5]
-            #puts ws_memory
-            #puts "---------"
-            session[:memory].push([ws_check[i,4], ws_check[i,5], ws_memory])
-            ws_memory = ""
-        else
-            roop = false
-            break
-        end
-        i += 1
-    end
-    #puts session[:memory]
-    rescue
-        puts 'error'
-        @error_check = true
-    end
+    tms_check(params[:tms])
     redirect "/home"
 end
