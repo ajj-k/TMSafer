@@ -6,8 +6,19 @@ require './models'
 require 'dotenv/load'
 require 'google_drive'
 require 'date'
+require "googleauth"
 
 enable :sessions
+
+credentials = Google::Auth::UserRefreshCredentials.new(
+  client_id: "592312556966-ei5l1daqd3toig4gffjgdrsds350rqo5.apps.googleusercontent.com",
+  client_secret: "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",
+  scope: [
+    "https://www.googleapis.com/auth/drive",
+    "https://spreadsheets.google.com/feeds/",
+  ],
+  redirect_uri: "https://342c1446a83b4ebe8d2cbcdbc3ff8e9f.vfs.cloud9.ap-northeast-1.amazonaws.com/redirect"
+  )
 
 before do
     Dotenv.load
@@ -152,6 +163,11 @@ post '/school/:id/members/add' do
 end
 
 post '/check' do
-    tms_check(params[:tms])
-    redirect "/home"
+    auth_url = credentials.authorization_uri
+    #tms_check(params[:tms])
+    redirect auth_url
+end
+
+post '/redirect' do
+    
 end
