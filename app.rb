@@ -164,10 +164,11 @@ end
 
 post '/check' do
     auth_url = credentials.authorization_uri
-    #tms_check(params[:tms])
+    session[:tms_memory] = (params[:tms])
     redirect auth_url
 end
 
-post '/redirect' do
-    
+get '/redirect' do
+    tms_check(session[:tms_memory])
+    redirect "/home"
 end
