@@ -54,7 +54,8 @@ helpers do
                 if ws_check[i,6+t].length != 0
                     ws_memory = ws_check[i,6+t]
                     date_check = ws_check[8,6+t]
-                    puts "get"
+                    #puts "get"
+                    #puts ws_check[8,6+t]
                 end
                 #puts ws_memory
             end
@@ -76,6 +77,18 @@ helpers do
         puts 'error'
         @error_check = true
     end
+    end
+    
+    #yearには8行目から取得した年情報が入っている
+    def date_chenge(date_string)
+        month = date_string.slice(/^.*月/)
+        day   = date_string.slice(/月.*日/)
+        month.delete!("月")
+        day.delete!("月")
+        day.delete!("日")
+        
+        return "#{month.to_i}月#{day.to_i}日"
+        
     end
 end
 
@@ -114,8 +127,10 @@ post '/sign_up' do
 end
 
 get '/home' do
-    day = Date.today
-    puts day
+    #day = Date.today
+    #puts day.year
+    #puts day.month
+    puts date_chenge("12月24日")
     erb :home 
 end
 
