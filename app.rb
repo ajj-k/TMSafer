@@ -90,6 +90,23 @@ helpers do
         return "#{month.to_i}月#{day.to_i}日"
         
     end
+    
+    def tms_date_chenge(date_string)
+        first_data = date_string.slice(/:.*~/)
+        last_data  = date_string.slice(/~.*日/)
+        #first_data = first_data.reverse
+        #last_data  = last_data.reverse
+        puts first_data
+        puts last_data
+        first_data.slice!(-5..-1)
+        first_data.delete!(":")
+        last_data.slice!(0..1)
+        puts first_data
+        puts last_data
+        
+        return "#{first_data} / #{last_data}"
+        
+    end
 end
 
 # config.jsonを読み込んでセッションを確立
@@ -131,6 +148,7 @@ get '/home' do
     #puts day.year
     #puts day.month
     puts date_chenge("12月24日")
+    puts tms_date_chenge("第3週:10月17日(日) ~ 10月23日(土)")
     erb :home 
 end
 
