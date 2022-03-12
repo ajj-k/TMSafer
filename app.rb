@@ -59,11 +59,17 @@ helpers do
                 end
                 #puts ws_memory
             end
-            puts date_check
+            #puts date_check
             #puts ws_check[i,4]
             #puts ws_check[i,5]
             #puts ws_memory
             #puts "---------"
+            begin
+            ws_memory_sub1, ws_memory_sub2 = tms_date_chenge(ws_memory)
+            ws_memory = "#{ws_memory_sub1} / #{ws_memory_sub2}"
+            rescue
+                puts "tms_error"
+            end
             session[:memory].push([ws_check[i,4], ws_check[i,5], ws_memory])
             ws_memory = ""
         else
@@ -79,7 +85,6 @@ helpers do
     end
     end
     
-    #yearには8行目から取得した年情報が入っている
     def date_chenge(date_string)
         month = date_string.slice(/^.*月/)
         day   = date_string.slice(/月.*日/)
@@ -104,7 +109,8 @@ helpers do
         puts first_data
         puts last_data
         
-        return "#{first_data} / #{last_data}"
+        #return "#{first_data} / #{last_data}"
+        return first_data, last_data
         
     end
 end

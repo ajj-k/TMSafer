@@ -1,7 +1,31 @@
-<form action="/sign_in" method="post">
-    <input type="text" name="mail" placeholder="mail">
-    <input type="password" name="password" placeholder="password">
-    <input type="submit" value="Sign_in">
-</form></br>
+<div class="text-center start">
+    <div class="form-signin" style="width: 100%; max-width: 330px; padding: 15px; margin: auto; ">
+        <form action="/sign_in" method="post">
+            <h1 class="h3 mb-3 fw-normal">TMSafer</h1>
+            
+            <div class="form-floating" style="z-index: 2;">
+                <input type="text" name="mail" placeholder="Email" class="form-control" id="floatingInput" style="margin-bottom: -1px; border-bottom-right-radius: 0; border-bottom-left-radius: 0;">
+                <label for="floatingInput">Email</label>
+            </div>
+            <div class="form-floating" style="z-index: 2;">
+                <input type="password" name="password" placeholder="password" class="form-control" id="floatingInput" style="margin-bottom: 10px; border-top-left-radius: 0; border-top-right-radius: 0;">
+                <label for="floatingInput">Password</label>
+            </div>
+            
+            <div class="form-check mb-3">
+                <!--<label>
+                    <input type="checkbox" value="remember-me" style="font-weight: 400;"> 状態を記録する
+                </label> -->
+            </div>
+            <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
+            
+        </form>
+    </div>
+</div>
+<script>
+$(function() {
+    $('.start').hide().fadeIn('slow');
+});
+</script>
 
 <a href="/sign_up">Sign_up画面</a>
