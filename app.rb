@@ -27,15 +27,34 @@ before do
         config.api_key    = ENV['CLOUDINARY_API_KEY']
         config.api_secret = ENV['CLOUDINARY_API_SECRET']
     end
+    session[:memory_array] = []
 end
 
 helpers do
+    #ログインしているユーザーの記録
     def current_user
         User.find_by(id: session[:user])
     end
+    #選択しているメンバーの記録
+    def current_member(id)
+        Member.find(id) 
+    end
     
     def tms_check(url)
-    session_google = GoogleDrive::Session.from_config("config.json")
+    credentials = Google::Auth::UserRefreshCredentials.new(
+    client_id: "592312556966-ei5l1daqd3toig4gffjgdrsds350rqo5.apps.googleusercontent.com",
+    client_secret: "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",
+    scope: [
+        "https://www.googleapis.com/auth/drive",
+        "https://spreadsheets.google.com/feeds/",
+        ],
+    redirect_uri: "https://342c1446a83b4ebe8d2cbcdbc3ff8e9f.vfs.cloud9.ap-northeast-1.amazonaws.com/redirect"
+    )
+    credentials.code = params[:code]
+    puts params[:code]
+    credentials.fetch_access_token!
+    session_google = GoogleDrive::Session.from_credentials(credentials)
+    #session_google = GoogleDrive::Session.from_config("config.json")
     @error_check = !@error_check
     begin
     session[:memory] = nil
@@ -64,38 +83,58 @@ helpers do
             #puts ws_check[i,5]
             #puts ws_memory
             #puts "---------"
-            begin
+           begin
             ws_memory_sub1, ws_memory_sub2 = tms_date_chenge(ws_memory)
             ws_memory = "#{ws_memory_sub1} / #{ws_memory_sub2}"
+            ws_memory_change =  date_change(ws_memory_sub1)
+            ws_month_memory, ws_day_memory = date_change(ws_memory_sub1)
+            ws_date_memory = "#{date_check[0,4]}-#{ws_month_memory}-#{ws_day_memory}"
+            ws_date = ws_date_memory.to_date
+            puts "------"
+            puts ws_date_memory
+            
+            puts ws_date
             rescue
                 puts "tms_error"
             end
+            #[i,4]はタスク内容, [i,5]は重要度, ws_memoryは締切日時を取得している
             session[:memory].push([ws_check[i,4], ws_check[i,5], ws_memory])
+            Task.create(
+                content: ws_check[i,4],
+                importance: importance_change(ws_check[i,5]),
+                date: ws_date,
+                member_id: session[:member]
+                )
             ws_memory = ""
         else
             roop = false
             break
         end
         i += 1
+        
     end
+    session[:member] = nil
     #puts session[:memory]
     rescue
         puts 'error'
         @error_check = true
-    end
+        session[:member] = nil
     end
     
-    def date_chenge(date_string)
+    end
+    
+    #yearは8行目から取得した年情報
+    def date_change(date_string)
         month = date_string.slice(/^.*月/)
         day   = date_string.slice(/月.*日/)
         month.delete!("月")
         day.delete!("月")
         day.delete!("日")
-        
-        return "#{month.to_i}月#{day.to_i}日"
+        return "#{month.to_i}","#{day.to_i}"
         
     end
     
+    #TMSの日付String情報を○
     def tms_date_chenge(date_string)
         first_data = date_string.slice(/:.*~/)
         last_data  = date_string.slice(/~.*日/)
@@ -113,11 +152,28 @@ helpers do
         return first_data, last_data
         
     end
+    
+    #締切チェック
+    def date_check(date)
+        
+    end
+    
+    def importance_change(data)
+        if data == "★★★"
+            return 3
+        elsif data == "☆★★"
+            return 2
+        elsif data == "☆☆★"
+            return 1
+        else
+            return 0
+        end
+    end
 end
 
 # config.jsonを読み込んでセッションを確立
 # この部分はテストを兼ねている
-session_google = GoogleDrive::Session.from_config("config.json")
+#session_google = GoogleDrive::Session.from_config("config.json")
 #sp = session_google.spreadsheet_by_url("https://docs.google.com/spreadsheets/d/1PdDmQSXqN_FnRhGj9mAhyhZDTdt1r2OrgJL-N4Y2ZMI/edit#gid=1393875168")
 #ws = sp.worksheet_by_title("TMS")
 
@@ -161,6 +217,7 @@ end
 post '/logout' do
     session[:user] = nil
     session[:memory] = nil
+    session[:memory_array] = nil
     redirect '/'
 end
 
@@ -205,9 +262,11 @@ post '/check' do
     auth_url = credentials.authorization_uri
     session[:tms_memory] = (params[:tms])
     redirect auth_url
+    #redirect "/redirect"
 end
 
 get '/redirect' do
+    session[:memory_array] = []
     tms_check(session[:tms_memory])
     redirect "/home"
 end
