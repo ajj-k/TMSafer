@@ -6,6 +6,11 @@
     <input type="submit" value="送信">
 </form></br>
 
+<form action="/check" method="post">
+    <input type="hidden" name="school" value="<%= @school_id %>">
+    <input type="submit" value="更新">
+</form></br>
+
 <p>メンバー一覧</p>
 <% current_user.schools.find(@school_id).members.each do |member| %>
     <p><%= member.name %></p>

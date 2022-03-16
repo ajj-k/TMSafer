@@ -40,7 +40,7 @@ helpers do
         Member.find(id) 
     end
     
-    def tms_check(url)
+    def tms_check(url,member)
     credentials = Google::Auth::UserRefreshCredentials.new(
     client_id: "592312556966-ei5l1daqd3toig4gffjgdrsds350rqo5.apps.googleusercontent.com",
     client_secret: "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",
@@ -103,7 +103,7 @@ helpers do
                 content: ws_check[i,4],
                 importance: importance_change(ws_check[i,5]),
                 date: ws_date,
-                member_id: session[:member]
+                member_id: member
                 )
             ws_memory = ""
         else
@@ -209,7 +209,7 @@ get '/home' do
     #day = Date.today
     #puts day.year
     #puts day.month
-    puts date_chenge("12月24日")
+    #puts date_chenge("12月24日")
     puts tms_date_chenge("第3週:10月17日(日) ~ 10月23日(土)")
     erb :home 
 end
@@ -246,13 +246,12 @@ post '/school/:id/members/add' do
        img_url = upload['url']
     end
     
-    Member.create({
+    member = Member.create({
         name: params[:name],
         url: params[:url],
         icon: img_url,
         school_id: params[:id]
     })
-    
     @school_id = params[:id]
     
     redirect "/school/#{params[:id]}"
@@ -261,12 +260,20 @@ end
 post '/check' do
     auth_url = credentials.authorization_uri
     session[:tms_memory] = (params[:tms])
+    session[:school_memory] = params[:school]
+    puts params[:school]
+    puts session[:school_memory]
+    puts "ここです"
     redirect auth_url
     #redirect "/redirect"
 end
 
 get '/redirect' do
     session[:memory_array] = []
-    tms_check(session[:tms_memory])
+    current_user.schools.find(session[:school_memory]).members.each do |member|
+        puts member.url
+        puts "----------ここですよ"
+    tms_check(member.url, member.id)
+    end
     redirect "/home"
 end
