@@ -155,7 +155,14 @@ helpers do
     
     #締切チェック
     def date_check(date)
-        
+        date_ob = (date - Date.today).to_i
+        if date_ob <= 7
+            return 2 
+        elsif date_ob <= 14   
+            return 1
+        else
+            return 0
+        end
     end
     
     def importance_change(data)
@@ -273,7 +280,9 @@ get '/redirect' do
     current_user.schools.find(session[:school_memory]).members.each do |member|
         puts member.url
         puts "----------ここですよ"
-    tms_check(member.url, member.id)
+        if member.url != ""
+            tms_check(member.url, member.id)
+        end
     end
     redirect "/home"
 end
