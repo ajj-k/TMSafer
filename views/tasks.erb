@@ -14,6 +14,9 @@
 <p>メンバー一覧</p>
 <% current_user.schools.find(@school_id).members.each do |member| %>
     <p><%= member.name %></p>
+    <% member.tasks.each do |task| %>
+    <p><%= task.content %></p>
+    <% end %>
     <p><img src="<%= member.icon %>" width="40" height="40"></p>
 <% end %>
 

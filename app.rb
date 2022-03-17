@@ -280,6 +280,11 @@ get '/redirect' do
     current_user.schools.find(session[:school_memory]).members.each do |member|
         puts member.url
         puts "----------ここですよ"
+        tasks = member.tasks
+        tasks.all.each do |task|
+            task.destroy
+            task.save
+        end
         if member.url != ""
             tms_check(member.url, member.id)
         end
