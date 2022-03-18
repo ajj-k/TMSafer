@@ -41,7 +41,7 @@ helpers do
         Member.find(id) 
     end
     
-    def tms_check(url,member)
+    def tms_check(url_array, member_array)
     credentials = Google::Auth::UserRefreshCredentials.new(
     client_id: "592312556966-ei5l1daqd3toig4gffjgdrsds350rqo5.apps.googleusercontent.com",
     client_secret: "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",
@@ -58,6 +58,9 @@ helpers do
     session_google = GoogleDrive::Session.from_credentials(credentials)
     #session_google = GoogleDrive::Session.from_config("config.json")
     @error_check = !@error_check
+    time = -1
+    url_array.each do |url|
+    time += 1
     begin
     session[:memory] = nil
     ws_memory = ""
@@ -105,7 +108,7 @@ helpers do
                 content: ws_check[i,4],
                 importance: importance_change(ws_check[i,5]),
                 date: ws_date,
-                member_id: member
+                member_id: member_array[time]
                 )
             ws_memory = ""
         else
@@ -122,8 +125,9 @@ helpers do
         @error_check = true
         session[:member] = nil
     end
+    end #url_array.each do 
     
-    end
+    end #tmscheck
     
     #yearは8行目から取得した年情報
     def date_change(date_string)
@@ -279,17 +283,29 @@ end
 
 get '/redirect' do
     session[:memory_array] = []
+    correct_member_url = []
+    correct_member_id  = []
+    
     current_user.schools.find(session[:school_memory]).members.each do |member|
-        puts member.url
-        puts "----------ここですよ"
+        #puts member.url
+        #puts "----------ここですよ"
         tasks = member.tasks
         tasks.all.each do |task|
             task.destroy
             task.save
         end
+        
         if member.url != ""
-            tms_check(member.url, member.id)
+            #tms_check(member.url, member.id)
+            correct_member_url.push(member.url)
+            correct_member_id.push(member.id)
         end
     end
+    #引数を配列にした
+    puts "correctな配列の確認"
+    puts correct_member_url
+    puts correct_member_id
+    puts "correctな配列の確認終わり"
+    tms_check(correct_member_url, correct_member_id)
     redirect "/home"
 end
