@@ -100,6 +100,7 @@ helpers do
             
             puts ws_date
             rescue
+                ws_date = nil
                 puts "tms_error"
             end
             #[i,4]はタスク内容, [i,5]は重要度, ws_memoryは締切日時を取得している

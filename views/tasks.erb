@@ -1,22 +1,52 @@
 <a href="/home">戻る</a></br>
 <a href='/school/<%= @school_id %>/del'>このスクールを削除する</a></br>
 
+<!--
 <form action="/check" method="post">
     <input type="text" name="tms" placeholder="TMSのURLを貼ってください">
     <input type="submit" value="送信">
 </form></br>
+-->
 
 <form action="/check" method="post">
     <input type="hidden" name="school" value="<%= @school_id %>">
     <input type="submit" value="更新">
 </form></br>
 
+<div class="mx-auto" style="width: 600px;">
+<div>
 <p>メンバー一覧</p>
+<% i = 0 %>
 <% current_user.schools.find(@school_id).members.each do |member| %>
+
     <p><%= member.name %></p>
+    <div class="btn-toolbar" role="toolbar">
+    <% i = 0 %>
     <% member.tasks.each do |task| %>
-    <p><%= task.content %></p>
+    <% i += 1 %>
+    <% puts i %>
+    <!--<div class="col-2">-->
+    
+        <% begin %>
+            <% if date_check(task.date) == 2 %>
+                &nbsp;&nbsp;<button type="button" class="btn btn-danger">&nbsp;&nbsp;&nbsp;</button>
+            <% elsif date_check(task.date) == 1 %>
+                &nbsp;&nbsp;<button type="button" class="btn btn-warning">&nbsp;&nbsp;&nbsp;</button>
+            <% else %>
+                &nbsp;&nbsp;<button type="button" class="btn btn-primary">&nbsp;&nbsp;&nbsp;</button>
+            <% end %>
+        <% rescue %>
+                &nbsp;&nbsp;<button type="button" class="btn btn-dark">&nbsp;&nbsp;&nbsp;</button>
+        <% end %>
+        
+        <% if i == 12 %>
+        <% i = 0 %>
+        <% end %>
+        
     <% end %>
+
+    </div> <!-- col -->
+    </div> <!-- row -->
     <p><img src="<%= member.icon %>" width="40" height="40"></p>
 <% end %>
 
@@ -43,10 +73,6 @@
                     <input type="submit" value="登録">
                 </form>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">閉じる</button>
-                <button type="button" class="btn btn-primary">OK</button>
-            </div>
         </div>
     </div>
 </div>
@@ -54,24 +80,26 @@
 <form action="/school/<%= @school_id %>/members/add" method="post">
     
 </form>
+</div>
+</div>
 
-<!--
-
-<% unless session[:memory].nil? %>
-<% session[:memory].each do |m| %>
-    <% (0..2).each do |t| %>
-        <p><%= m[t] %></p>
-    <% end %>
-    <p>--------------</p>
-<% end %>
-<% else %>
-TMSがありません
-<% if @error_check %>
-Error!
-<% end %>
-<% end %>
-
--->
+<div class="container">
+    <div class="row">
+       <div class="col-md-10 col-md-offset-1">col-md-10 col-md-offset-1</div>
+    </div>
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">col-md-8 col-md-offset-2</div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">col-md-6 col-md-offset-3</div>
+    </div>
+    <div class="row">
+        <div class="col-md-4 col-md-offset-4">col-md-4 col-md-offset-4</div>
+    </div>
+    <div class="row">
+        <div class="col-md-2 col-md-offset-5">col-md-2 col-md-offset-5</div>
+    </div>
+</div>
 
 
 
