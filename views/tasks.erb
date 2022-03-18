@@ -42,26 +42,30 @@
     <% end %>
     
     <% safety_task.each do |task| %>
-        <div class="col">
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ContentModal" style="margin: 1em;">&nbsp;&nbsp;&nbsp;</button>
+        <div class="col task">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ContentModal" data-bs-content="<%= task.content %>" data-bs-date="<%= task.date %>" data-bs-importance="<%= task.importance %>" style="margin: 1em;">&nbsp;&nbsp;&nbsp;</button>
+            <input type="hidden" class="tms" value="<%= task.id %>">
         </div>
     <% end %>
         
     <% warning_task.each do |task| %>
-        <div class="col">
-            <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#ContentModal" style="margin: 1em;">&nbsp;&nbsp;&nbsp;</button>
+        <div class="col task">
+            <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#ContentModal" data-bs-content="<%= task.content %>" data-bs-date="<%= task.date %>" data-bs-importance="<%= task.importance %>" style="margin: 1em;">&nbsp;&nbsp;&nbsp;</button>
+            <input type="hidden" class="tms" value="<%= task.id%>">
         </div>
     <% end %>
     
     <% danger_task.each do |task| %>
-        <div class="col">
-            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#ContentModal" style="margin: 1em;">&nbsp;&nbsp;&nbsp;</button>
+        <div class="col task">
+            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#ContentModal" data-bs-content="<%= task.content %>" data-bs-date="<%= task.date %>" data-bs-importance="<%= task.importance %>" style="margin: 1em;">&nbsp;&nbsp;&nbsp;</button>
+            <input type="hidden" class="tms" value="<%= task.id%>">
         </div>
     <% end %>
     
     <% some_task.each do |task| %>
-        <div class="col">
-            <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#ContentModal" style="margin: 1em;">&nbsp;&nbsp;&nbsp;</button>
+        <div class="col task">
+            <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#ContentModal" data-bs-content="<%= task.content %>" data-bs-date="<%= task.date %>" data-bs-importance="<%= task.importance %>" style="margin: 1em;">&nbsp;&nbsp;&nbsp;</button>
+            <input type="hidden" class="tms" value="<%= task.id%>">
         </div>
     <% end %>
     
@@ -72,11 +76,13 @@
 
 <% end %>
 
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+
+<button type="button" class="btn btn-primary mx-auto" style="width: 200px;" data-bs-toggle="modal" data-bs-target="#exampleModal">
     新規メンバー登録
 </button>
 </div>
 
+<!-- メンバー登録用モーダル -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -100,24 +106,20 @@
     </div>
 </div>
 
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="ContentModal">
+<!-- タスク表示用モーダル -->
+<div class="modal fade" id="ContentModal" tabindex="-1" role="dialog" aria-labelledby="ContentModal">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">新規メンバー登録</h5>
+                <h5 class="modal-title" id="ContentModalLabel">TMS情報</h5>
                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
-                <p>メンバー登録</p>
-                <form action="/school/<%= @school_id %>/members/add" method="post" enctype="multipart/form-data">
-                    <input type="text" name="name" placeholder="ニックネームを入力してください"></br>
-                    <!--<input type="text" name="cource" placeholder="コース名を入力してください">-->
-                    <input type="text" name="url" placeholder="TMSのURLを入力してください"></br>
-                    <input type="file" name="icon"></br>
-                    <input type="submit" value="登録">
-                </form>
+            <div class="modal-body" id="tms">
+                <div class="content"></div></br>
+                <div class="date"></div></br>
+                <div class="importance"></div></br>
             </div>
         </div>
     </div>
@@ -129,3 +131,38 @@
 </div>
 </div>
 
+<script>
+    var Modal = document.getElementById('ContentModal');
+    Modal.addEventListener('show.bs.modal', function(event) {
+        var button = event.relatedTarget;
+        var recipient_Content = button.getAttribute('data-bs-content');
+        var recipient_Date = button.getAttribute('data-bs-date');
+        var recipient_importance = button.getAttribute('data-bs-importance');
+        
+        $("#tms .content").text(recipient_Content);
+        $("#tms .date").text(recipient_Date);
+        $("#tms .importance").text(recipient_importance);
+        console.log("呼ばれました")
+    })
+</script>
+
+<!--
+<script>
+	window.onload = function() {
+		$(".task").click(function() {
+			var tms = $(".tms",this).value();
+
+			$.ajax("/api/station", {
+				type: "GET",
+				data: { line: line, name: name},
+				datatype: "json",
+			})
+			.done(function (json) {
+				$("#tms .next").text("");
+				$("#detail .prev").text(json["prev"]);
+			})
+			console.log(line + " " + name);
+		});
+	}
+</script>
+-->
