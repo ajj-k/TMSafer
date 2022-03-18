@@ -14,47 +14,93 @@
 </form></br>
 
 <div class="mx-auto" style="width: 600px;">
-<div>
-<p>メンバー一覧</p>
+<h1>メンバー一覧</h1>
 <% i = 0 %>
 <% current_user.schools.find(@school_id).members.each do |member| %>
-
-    <p><%= member.name %></p>
-    <div class="btn-toolbar" role="toolbar">
-    <% i = 0 %>
-    <% member.tasks.each do |task| %>
-    <% i += 1 %>
-    <% puts i %>
-    <!--<div class="col-2">-->
+<div class="mx-auto" style="width: 600px;">
+    <h2><%= member.name %> <img src="<%= member.icon %>" width="60" height="60"></h2>
+    <div class="container">
+    <div class="row row-col-6">
+        
+    <% danger_task = [] %>
+    <% warning_task = [] %>
+    <% safety_task = [] %>
+    <% some_task = [] %>
     
+    <% member.tasks.each do |task| %>
         <% begin %>
             <% if date_check(task.date) == 2 %>
-                &nbsp;&nbsp;<button type="button" class="btn btn-danger">&nbsp;&nbsp;&nbsp;</button>
+                <% danger_task.push(task) %>
             <% elsif date_check(task.date) == 1 %>
-                &nbsp;&nbsp;<button type="button" class="btn btn-warning">&nbsp;&nbsp;&nbsp;</button>
+                <% warning_task.push(task) %>
             <% else %>
-                &nbsp;&nbsp;<button type="button" class="btn btn-primary">&nbsp;&nbsp;&nbsp;</button>
+                <% safety_task.push(task) %>
             <% end %>
         <% rescue %>
-                &nbsp;&nbsp;<button type="button" class="btn btn-dark">&nbsp;&nbsp;&nbsp;</button>
+                <% some_task.push(task) %>
         <% end %>
-        
-        <% if i == 12 %>
-        <% i = 0 %>
-        <% end %>
-        
     <% end %>
+    
+    <% safety_task.each do |task| %>
+        <div class="col">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ContentModal" style="margin: 1em;">&nbsp;&nbsp;&nbsp;</button>
+        </div>
+    <% end %>
+        
+    <% warning_task.each do |task| %>
+        <div class="col">
+            <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#ContentModal" style="margin: 1em;">&nbsp;&nbsp;&nbsp;</button>
+        </div>
+    <% end %>
+    
+    <% danger_task.each do |task| %>
+        <div class="col">
+            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#ContentModal" style="margin: 1em;">&nbsp;&nbsp;&nbsp;</button>
+        </div>
+    <% end %>
+    
+    <% some_task.each do |task| %>
+        <div class="col">
+            <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#ContentModal" style="margin: 1em;">&nbsp;&nbsp;&nbsp;</button>
+        </div>
+    <% end %>
+    
+    </div>
+    </div>
 
     </div> <!-- col -->
-    </div> <!-- row -->
-    <p><img src="<%= member.icon %>" width="40" height="40"></p>
+
 <% end %>
 
 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
     新規メンバー登録
 </button>
+</div>
 
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">新規メンバー登録</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>メンバー登録</p>
+                <form action="/school/<%= @school_id %>/members/add" method="post" enctype="multipart/form-data">
+                    <input type="text" name="name" placeholder="ニックネームを入力してください"></br>
+                    <!--<input type="text" name="cource" placeholder="コース名を入力してください">-->
+                    <input type="text" name="url" placeholder="TMSのURLを入力してください"></br>
+                    <input type="file" name="icon"></br>
+                    <input type="submit" value="登録">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="ContentModal">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -82,24 +128,4 @@
 </form>
 </div>
 </div>
-
-<div class="container">
-    <div class="row">
-       <div class="col-md-10 col-md-offset-1">col-md-10 col-md-offset-1</div>
-    </div>
-    <div class="row">
-        <div class="col-md-8 col-md-offset-2">col-md-8 col-md-offset-2</div>
-    </div>
-    <div class="row">
-        <div class="col-md-6 col-md-offset-3">col-md-6 col-md-offset-3</div>
-    </div>
-    <div class="row">
-        <div class="col-md-4 col-md-offset-4">col-md-4 col-md-offset-4</div>
-    </div>
-    <div class="row">
-        <div class="col-md-2 col-md-offset-5">col-md-2 col-md-offset-5</div>
-    </div>
-</div>
-
-
 
