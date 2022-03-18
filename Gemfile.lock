@@ -1,4 +1,5 @@
 GEM
+  remote: https://rubygems.org/
   specs:
     activemodel (6.1.4.6)
       activesupport (= 6.1.4.6)
@@ -201,6 +202,9 @@ DEPENDENCIES
   sinatra-activerecord (~> 2.0)
   sinatra-contrib (~> 2.1)
   webrick (~> 1.7)
+
+RUBY VERSION
+   ruby 3.0.0p0
 
 BUNDLED WITH
    2.3.8
