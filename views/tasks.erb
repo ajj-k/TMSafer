@@ -1,19 +1,23 @@
-<a href="/home">戻る</a></br>
-<a href='/school/<%= @school_id %>/del'>このスクールを削除する</a></br>
+<form action="/home" method="get">
+    <button type="submit" class="btn btn-link" style="padding-left:2em; padding-top:1em;">戻る</button>
+</form>
 
-<!--
-<form action="/check" method="post">
-    <input type="text" name="tms" placeholder="TMSのURLを貼ってください">
-    <input type="submit" value="送信">
-</form></br>
--->
 <div class="mx-auto" style="width: 600px;">
     
 <div style="font-family: 'M PLUS 1', sans-serif;">
 <form action="/check" method="post">
-    <h1 style="font-weight: bold;">メンバー一覧 <input type="submit" class="btn btn-secondary"value="TMS更新"></h1>
+    <h1 style="font-weight: bold;" class="border-bottom"><%= current_user.schools.find(@school_id).name %></h1>
+    <h1 style="font-weight: bold; margin-top:1em ;">メンバー一覧 <input type="submit" class="btn btn-secondary"value="TMS更新">
+    <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#SchoolDeleteModal">
+        スクール削除
+    </button>
+    </h1>
     <input type="hidden" name="school" value="<%= @school_id %>">
 </form></br>
+
+<% if current_user.schools.find(@school_id).members.count == 0 %>
+    <h3>メンバーがいません...</h3>
+<% end %>
 
 <% current_user.schools.find(@school_id).members.each do |member| %>
 <div class="mx-auto" style="width: 600px;">
@@ -148,6 +152,28 @@
         <form action="/school/members/del" method="post" id="tms_delete">
             <button type="submit" class="btn btn-primary">削除</button>
             <input type="hidden" name="id" class="delete" value="">
+            <input type="hidden" name="school" value="<%= @school_id %>">
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- スクール削除モーダル -->
+<div class="modal fade" id="SchoolDeleteModal" tabindex="-1" aria-labelledby="SchoolDeleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="SchoolDeleteModalLabel">警告</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        本当に削除しますか？
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">閉じる</button>
+        <form action="/school/del" method="post">
+            <button type="submit" class="btn btn-primary">削除</button>
             <input type="hidden" name="school" value="<%= @school_id %>">
         </form>
       </div>

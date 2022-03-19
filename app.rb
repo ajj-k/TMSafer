@@ -245,10 +245,10 @@ post '/school/create' do
     redirect '/home'
 end
 
-get '/school/:id/del' do
-    school = School.find(params[:id])
+post '/school/del' do
+    school = School.find(params[:school])
     school.destroy
-    erb :home
+    redirect '/home'
 end
 
 post '/school/members/del' do
