@@ -228,6 +228,13 @@ get '/home' do
     erb :home 
 end
 
+get '/logout' do
+    session[:user] = nil
+    session[:memory] = nil
+    session[:memory_array] = nil
+    redirect '/'
+end
+
 post '/logout' do
     session[:user] = nil
     session[:memory] = nil
@@ -290,6 +297,7 @@ post '/check' do
 end
 
 get '/redirect' do
+    begin
     session[:memory_array] = []
     correct_member_url = []
     correct_member_id  = []
@@ -308,4 +316,7 @@ get '/redirect' do
     #引数を配列にした
     tms_check(correct_member_url, correct_member_id)
     redirect "/school/#{session[:school_memory]}"
+    rescue
+    redirect '/logout'
+    end
 end

@@ -1,3 +1,4 @@
+<% begin %>
 <form action="/home" method="get">
     <button type="submit" class="btn btn-link" style="padding-left:2em; padding-top:1em;">戻る</button>
 </form>
@@ -6,11 +7,12 @@
     
 <div style="font-family: 'M PLUS 1', sans-serif;">
 <form action="/check" method="post">
-    <h1 style="font-weight: bold;" class="border-bottom"><%= current_user.schools.find(@school_id).name %></h1>
-    <h1 style="font-weight: bold; margin-top:1em ;">メンバー一覧 <input type="submit" class="btn btn-secondary"value="TMS更新">
-    <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#SchoolDeleteModal">
-        スクール削除
-    </button>
+    <div class="start">
+        <h1 style="font-weight: bold;" class="border-bottom"><%= current_user.schools.find(@school_id).name %></h1>
+        <h1 style="font-weight: bold; margin-top:1em ;">メンバー一覧 <input type="submit" class="btn btn-secondary"value="TMS更新">
+        <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#SchoolDeleteModal">
+            スクール削除
+        </button>
     </h1>
     <input type="hidden" name="school" value="<%= @school_id %>">
 </form></br>
@@ -96,6 +98,7 @@
     新規メンバー登録
 </button>
 </div>
+</div>
 
 <!-- メンバー登録用モーダル -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
@@ -105,14 +108,14 @@
                 <h5 class="modal-title" id="exampleModalLabel">新規メンバー登録</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                <p>メンバー登録</p>
+            <div class="modal-body" style="padding:1em;">
+                <p style="margin-left:1em;">メンバー登録</p>
                 <form action="/school/<%= @school_id %>/members/add" method="post" enctype="multipart/form-data">
-                    <input type="text" name="name" placeholder="ニックネームを入力してください"></br>
+                    <input style="margin-left:1em; margin-bottom:1em;" type="text" name="name" placeholder="ニックネーム"></br>
                     <!--<input type="text" name="cource" placeholder="コース名を入力してください">-->
-                    <input type="text" name="url" placeholder="TMSのURLを入力してください"></br>
-                    <input type="file" name="icon"></br>
-                    <input type="submit" value="登録">
+                    <input style="margin-left:1em;" type="text" name="url" placeholder="TMS_URL"></br>
+                    <input style="margin:1em;" type="file" name="icon"></br>
+                    <input style="margin-left:1em;" class="btn btn-primary" type="submit" value="登録">
                 </form>
             </div>
         </div>
@@ -184,8 +187,15 @@
 
 
 </div>
+<% rescue %>
+<h3 class="border-bottom">エラーです…もういちどログインしてください</h3>
+<form action="/logout" method="post">
+    <input class="btn btn-link" type="submit" value="こちらから">
+</form></br>
 </div>
 </div>
+</div>
+<% end %>
 
 <script>
     var Modal = document.getElementById('ContentModal');
@@ -218,5 +228,10 @@
         
         $("#tms_delete .delete").val(recipient_member);
         console.log(recipient_member)
-    })
+    });
+    
+
+    $(function() {
+        $('.start').hide().fadeIn('slow');
+    });
 </script>

@@ -1,34 +1,15 @@
-<p>Home Test <%= current_user.name %>としてログイン</p>
+<div class="mx-auto start" style="width: 600px; font-family: 'M PLUS 1', sans-serif;">
+<% begin %>
+<h1 style="margin-top:64px;"class="border-bottom"><%= current_user.name %>さん、ようこそ</h1>
 
 <form action="/logout" method="post">
-    <input type="submit" value="logout">
+    <input class="btn btn-link" type="submit" value="お帰りですか？">
 </form></br>
 
-<!--
 
-<form action="/check" method="post">
-    <input type="text" name="tms" placeholder="TMSのURLを貼ってください">
-    <input type="submit" value="送信">
-</form></br>
-
-<% unless session[:memory].nil? %>
-<% session[:memory].each do |m| %>
-    <% (0..2).each do |t| %>
-        <p><%= m[t] %></p>
-    <% end %>
-    <p>--------------</p>
-<% end %>
-<% else %>
-TMSがありません
-<% if @error_check %>
-Error!
-<% end %>
-<% end %>
--->
-
-<p>School一覧</p>
+<h2>School一覧</h2>
 <% current_user.schools.all.each do |school| %>
-    <a href="/school/<%= school.id %>"><%= school.name %></a></br>
+    <a class="btn btn-link" href="/school/<%= school.id %>"><%= school.name %></a></br>
 <% end %>
 
 <!--
@@ -41,7 +22,7 @@ Error!
 
 
 <!-- data-bs-〇〇 と入力する必要がある -->
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+<button style="margin-top:1em;"type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
     新規スクール作成
 </button>
 
@@ -49,19 +30,23 @@ Error!
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">タイトル</h5>
-                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <h5 class="modal-title" id="exampleModalLabel">新規スクール登録</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <p>内容</p>
+                <p>スクール名を記入してください</p>
                 <form action="/school/create" method="post">
-                    <input type="text" name="name" placeholder="school名を入力してください">
+                    <input type="text" name="name" placeholder="school_name">
                     <input type="submit" value="登録">
                 </form>
             </div>
         </div>
     </div>
 </div>
-
+<% rescue %>
+<h3 class="border-bottom">エラーです…もういちどログインしてください</h3>
+<form action="/logout" method="post">
+    <input class="btn btn-link" type="submit" value="こちらから">
+</form></br>
+</div>
+<% end %>
