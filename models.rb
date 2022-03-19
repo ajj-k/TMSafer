@@ -5,6 +5,9 @@ ActiveRecord::Base.establish_connection
 
 class User < ActiveRecord::Base
     has_secure_password
+    validates :mail,
+    presence: true,
+    format: {with:/\A.+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+\z/}
     has_many :schools, dependent: :destroy
 end
 

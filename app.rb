@@ -195,10 +195,12 @@ get '/' do
     #ws[2, 1] = "foo" # セルA2
     #ws[2, 2] = "bar" # セルB2
     #ws.save
+    session[:user] = nil
     erb :sign_in
 end
 
 get '/sign_up' do
+    session[:user] = nil
    erb :sign_up 
 end
 
@@ -211,12 +213,19 @@ post '/sign_in' do
 end
 
 post '/sign_up' do
-    @user = User.create(name: params[:name], mail: params[:mail], password: params[:password],
-    password_confirmation: params[:password_confirmation]) 
-    if @user.persisted? #登録済みだった場合の確認
-        session[:user] = @user.id 
+    session[:emailCheck] = 0
+    userCheck = User.find_by(mail: params[:mail])
+    if userCheck
+        session[:emailCheck] = 1
+    else
+        @user = User.create(name: params[:name], mail: params[:mail], password: params[:password],
+        password_confirmation: params[:password_confirmation]) 
+        if @user.persisted? #登録済みだった場合の確認
+            session[:user] = @user.id 
+        end
+        redirect '/home' 
     end
-    redirect '/home' 
+    redirect '/sign_up'
 end
 
 get '/home' do
@@ -229,6 +238,7 @@ get '/home' do
 end
 
 get '/logout' do
+    session[:emailCheck] = 0
     session[:user] = nil
     session[:memory] = nil
     session[:memory_array] = nil

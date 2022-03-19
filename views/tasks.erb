@@ -1,15 +1,14 @@
 <% begin %>
-<form action="/home" method="get">
-    <button type="submit" class="btn btn-link" style="padding-left:2em; padding-top:1em;">戻る</button>
-</form>
-
-<div class="mx-auto" style="width: 600px;">
+<div class="mx-auto" style="width: 600px; font-family: 'M PLUS 1', sans-serif;">
     
-<div style="font-family: 'M PLUS 1', sans-serif;">
-<form action="/check" method="post">
     <div class="start">
-        <h1 style="font-weight: bold;" class="border-bottom"><%= current_user.schools.find(@school_id).name %></h1>
-        <h1 style="font-weight: bold; margin-top:1em ;">メンバー一覧 <input type="submit" class="btn btn-secondary"value="TMS更新">
+        <form action="/home" method="get">
+            <h1 style="font-weight: bold; margin-top:64px;" class="border-bottom"><%= current_user.schools.find(@school_id).name %>
+                <button type="submit" class="btn btn-link" style="padding-left:2em; padding-top:1em; display:inline;">戻る</button>
+            </h1>
+        </form>
+        <form action="/check" method="post">
+        <h1 style="font-weight: bold; margin-top:1em ;">メンバー一覧 <input type="submit" class="btn btn-secondary" value="TMS更新">
         <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#SchoolDeleteModal">
             スクール削除
         </button>
@@ -98,7 +97,7 @@
     新規メンバー登録
 </button>
 </div>
-</div>
+
 
 <!-- メンバー登録用モーダル -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
@@ -186,14 +185,12 @@
 
 
 
-</div>
+
 <% rescue %>
 <h3 class="border-bottom">エラーです…もういちどログインしてください</h3>
 <form action="/logout" method="post">
     <input class="btn btn-link" type="submit" value="こちらから">
 </form></br>
-</div>
-</div>
 </div>
 <% end %>
 
