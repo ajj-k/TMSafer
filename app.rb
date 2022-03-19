@@ -17,7 +17,7 @@ credentials = Google::Auth::UserRefreshCredentials.new(
     "https://www.googleapis.com/auth/drive",
     "https://spreadsheets.google.com/feeds/",
   ],
-  redirect_uri: "https://342c1446a83b4ebe8d2cbcdbc3ff8e9f.vfs.cloud9.ap-northeast-1.amazonaws.com/redirect",
+  redirect_uri: "https://arcane-depths-58881.herokuapp.com/redirect",
   additional_parameters: {"access_type"=>"offline"}
   )
 
@@ -49,7 +49,7 @@ helpers do
         "https://www.googleapis.com/auth/drive",
         "https://spreadsheets.google.com/feeds/",
         ],
-    redirect_uri: "https://342c1446a83b4ebe8d2cbcdbc3ff8e9f.vfs.cloud9.ap-northeast-1.amazonaws.com/redirect"
+    redirect_uri: "https://arcane-depths-58881.herokuapp.com/redirect"
     #additional_parameters: {"access_type"=>"offline"}
     )
     credentials.code = params[:code]
