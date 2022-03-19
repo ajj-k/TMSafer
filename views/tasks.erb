@@ -7,18 +7,29 @@
     <input type="submit" value="送信">
 </form></br>
 -->
-
+<div class="mx-auto" style="width: 600px;">
+    
+<div style="font-family: 'M PLUS 1', sans-serif;">
 <form action="/check" method="post">
+    <h1 style="font-weight: bold;">メンバー一覧 <input type="submit" class="btn btn-secondary"value="TMS更新"></h1>
     <input type="hidden" name="school" value="<%= @school_id %>">
-    <input type="submit" value="更新">
 </form></br>
 
-<div class="mx-auto" style="width: 600px;">
-<h1>メンバー一覧</h1>
-<% i = 0 %>
 <% current_user.schools.find(@school_id).members.each do |member| %>
 <div class="mx-auto" style="width: 600px;">
-    <h2><%= member.name %> <img src="<%= member.icon %>" width="60" height="60"></h2>
+    <% if member.icon != "" %>
+    <h2><%= member.name %> <img src="<%= member.icon %>" width="60" height="60">
+        <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#DeleteModal" data-bs-delete="<%= member.id %>">
+            削除
+        </button>
+    </h2>
+    <% else %>
+    <h2><%= member.name %> <img src="/assets/image/programming.png" width="60" height="60">
+        <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#DeleteModal" data-bs-delete="<%= member.id %>">
+            削除
+        </button>
+    </h2>
+    <% end %>
     <div class="container">
     <div class="row row-col-6">
         
@@ -65,7 +76,7 @@
     <% some_task.each do |task| %>
         <div class="col task">
             <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#ContentModal" data-bs-content="<%= task.content %>" data-bs-date="<%= task.date %>" data-bs-importance="<%= task.importance %>" style="margin: 1em;">&nbsp;&nbsp;&nbsp;</button>
-            <input type="hidden" class="tms" value="<%= task.id%>">
+            <input type="hidden" class="tms" value="<%= task.id %>">
         </div>
     <% end %>
     
@@ -77,7 +88,7 @@
 <% end %>
 
 
-<button type="button" class="btn btn-primary mx-auto" style="width: 200px;" data-bs-toggle="modal" data-bs-target="#exampleModal">
+<button type="button" class="btn btn-primary mx-auto" style="width: 200px; margin-top: 20px;" data-bs-toggle="modal" data-bs-target="#exampleModal">
     新規メンバー登録
 </button>
 </div>
@@ -88,9 +99,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">新規メンバー登録</h5>
-                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <p>メンバー登録</p>
@@ -112,9 +121,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="ContentModalLabel">TMS情報</h5>
-                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" id="tms">
                 <div class="content"></div></br>
@@ -125,9 +132,32 @@
     </div>
 </div>
 
-<form action="/school/<%= @school_id %>/members/add" method="post">
-    
-</form>
+<!-- メンバー削除モーダル -->
+<div class="modal fade" id="DeleteModal" tabindex="-1" aria-labelledby="DeleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="DeleteModalLabel">警告</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        本当に削除しますか？
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">閉じる</button>
+        <form action="/school/members/del" method="post" id="tms_delete">
+            <button type="submit" class="btn btn-primary">削除</button>
+            <input type="hidden" name="id" class="delete" value="">
+            <input type="hidden" name="school" value="<%= @school_id %>">
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+</div>
 </div>
 </div>
 
@@ -139,30 +169,28 @@
         var recipient_Date = button.getAttribute('data-bs-date');
         var recipient_importance = button.getAttribute('data-bs-importance');
         
+        if (recipient_importance == "3") {
+            recipient_importance = "★★★"
+        } else if (recipient_importance == "2") {
+            recipient_importance = "☆★★"
+        } else if (recipient_importance == "1") {
+            recipient_importance = "☆☆★"
+        } else {
+            recipient_importance = "others"
+        }
+        
         $("#tms .content").text(recipient_Content);
         $("#tms .date").text(recipient_Date);
         $("#tms .importance").text(recipient_importance);
         console.log("呼ばれました")
+    });
+    
+    var delete_modal = document.getElementById('DeleteModal');
+    delete_modal.addEventListener('show.bs.modal', function(event) {
+        var button = event.relatedTarget;
+        var recipient_member = button.getAttribute('data-bs-delete');
+        
+        $("#tms_delete .delete").val(recipient_member);
+        console.log(recipient_member)
     })
 </script>
-
-<!--
-<script>
-	window.onload = function() {
-		$(".task").click(function() {
-			var tms = $(".tms",this).value();
-
-			$.ajax("/api/station", {
-				type: "GET",
-				data: { line: line, name: name},
-				datatype: "json",
-			})
-			.done(function (json) {
-				$("#tms .next").text("");
-				$("#detail .prev").text(json["prev"]);
-			})
-			console.log(line + " " + name);
-		});
-	}
-</script>
--->

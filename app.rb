@@ -251,6 +251,13 @@ get '/school/:id/del' do
     erb :home
 end
 
+post '/school/members/del' do
+    member = Member.find(params[:id])
+    member.destroy
+    session[:school_memory] = params[:school]
+    redirect "/school/#{session[:school_memory]}"
+end
+
 post '/school/:id/members/add' do
     img_url = ''
     if params[:icon]
@@ -288,25 +295,17 @@ get '/redirect' do
     correct_member_id  = []
     
     current_user.schools.find(session[:school_memory]).members.each do |member|
-        #puts member.url
-        #puts "----------ここですよ"
         tasks = member.tasks
         tasks.all.each do |task|
             task.destroy
             task.save
         end
-        
         if member.url != ""
-            #tms_check(member.url, member.id)
             correct_member_url.push(member.url)
             correct_member_id.push(member.id)
         end
     end
     #引数を配列にした
-    puts "correctな配列の確認"
-    puts correct_member_url
-    puts correct_member_id
-    puts "correctな配列の確認終わり"
     tms_check(correct_member_url, correct_member_id)
-    redirect "/home"
+    redirect "/school/#{session[:school_memory]}"
 end

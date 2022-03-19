@@ -2,3 +2,7 @@
 	display:flex;
 	flex-diretion: row;
 }
+
+h2{
+	font-family: 'M PLUS 1', sans-serif;
+}
