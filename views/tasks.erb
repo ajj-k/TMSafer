@@ -45,6 +45,7 @@
     
     <% member.tasks.each do |task| %>
         <% begin %>
+        <% if task.importance != 0 %>
             <% if date_check(task.date) == 2 %>
                 <% danger_task.push(task) %>
             <% elsif date_check(task.date) == 1 %>
@@ -52,6 +53,7 @@
             <% else %>
                 <% safety_task.push(task) %>
             <% end %>
+        <% end %>
         <% rescue %>
                 <% some_task.push(task) %>
         <% end %>
