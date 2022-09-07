@@ -12,8 +12,8 @@ services:
     env: ruby
     plan: free
     region: singapore
-    buildCommand: './bin/render-build.sh'
-    startCommand: 'bundle exec puma -C config/puma.rb'
+    buildCommand: 'bundle install && rake db:create && rake db:migrate'
+    startCommand: 'ruby app.rb'
     envVars:
       # 環境変数 DATABASE_URL に databases で定義した rails-render-demo データベースの接続情報を格納する
       # Railsのconfig/database.ymlでこの環境変数を使ってデータベースに接続する
