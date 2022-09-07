@@ -1,7 +1,7 @@
 databases:
-  - name: s_tmsafer
-    databaseName: s_tmsafer
-    user: s_tmsafer
+  - #name: s_tmsafer
+    #databaseName: s_tmsafer
+    #user: s_tmsafer
     plan: free
     region: singapore
     postgresMajorVersion: 14
@@ -18,8 +18,8 @@ services:
       # 環境変数 DATABASE_URL に databases で定義した rails-render-demo データベースの接続情報を格納する
       # Railsのconfig/database.ymlでこの環境変数を使ってデータベースに接続する
       - key: DATABASE_URL
-        fromDatabase:
-          name: s_tmsafer
-          property: connectionString
+        #fromDatabase:
+        #  name: s_tmsafer
+        #  property: connectionString
       # Environment Group rails-render-demo_dotenv の環境変数・Secret Filesを使う
       # - fromGroup: rails-render-demo_dotenv
