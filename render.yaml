@@ -1,5 +1,5 @@
 databases:
-  - name: s-tmsafer
+  - name: s_tmsafer
     databaseName: s_tmsafer
     user: s_tmsafer
     plan: free
